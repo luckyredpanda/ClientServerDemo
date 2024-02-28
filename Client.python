@@ -1,0 +1,13 @@
+import socket
+
+def start_client(server_host='127.0.0.1', server_port=65432, message=b'Hello, server'):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((server_host, server_port))
+        s.sendall(message)
+        data = s.recv(1024)
+        print(f"Received: {data.decode()}")
+
+if __name__ == "__main__":
+    # 发送自定义消息
+    start_client(message=b'Hello, server')
+    start_client(message=b'Hi there!')
