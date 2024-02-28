@@ -4,9 +4,12 @@ import threading
 def handle_client(conn, addr):
     print(f"Connected by {addr}")
     try:
+        # 第一条消息是客户端的名称
+        client_name = conn.recv(1024).decode()
+        print(f"{client_name} connected")
         while True:
             data = conn.recv(1024)
-            if not data:
+            if not data or data.decode().lower() == 'exit':
                 break
             print(f"Received from {addr}: {data.decode()}")
             conn.sendall(data)  # Echo back the received data
