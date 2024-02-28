@@ -1,13 +1,21 @@
 import socket
 
-def start_client(server_host='127.0.0.1', server_port=65432, message=b'Hello, server'):
+def start_client(server_host='127.0.0.1', server_port=65432, client_name='Client'):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((server_host, server_port))
-        s.sendall(message)
-        data = s.recv(1024)
-        print(f"Received: {data.decode()}")
+        # 首先发送客户端的名称
+        s.sendall(client_name.encode())
+        try:
+            while True:
+                message = input("Enter message (type 'exit' to quit): ")
+                if message.lower() == 'exit':
+                    break
+                s.sendall(message.encode())
+                data = s.recv(1024)
+                print(f"Received: {data.decode()}")
+        finally:
+            s.close()
 
 if __name__ == "__main__":
-    # 发送自定义消息
-    start_client(message=b'Hello, server')
-    start_client(message=b'Hi there!')
+    client_name = input("Enter your client name: ")
+    start_client(client_name=client_name)
